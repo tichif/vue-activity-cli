@@ -3,7 +3,8 @@
     <nav class="navbar is-white topNav">
       <div class="container">
         <div class="navbar-brand">
-          <h1>Activity Planner</h1>
+          <h1>{{ fullAppName }}</h1>
+          <!-- <h1>{{ watchedName }}</h1> -->
         </div>
       </div>
     </nav>
@@ -11,18 +12,9 @@
       <div class="container">
         <div class="navbar-menu">
           <div class="navbar-start">
-            <a
-              class="navbar-item is-active"
-              href="#"
-            >Newest</a>
-            <a
-              class="navbar-item"
-              href="#"
-            >In Progress</a>
-            <a
-              class="navbar-item"
-              href="#"
-            >Finished</a>
+            <a class="navbar-item is-active" href="#">Newest</a>
+            <a class="navbar-item" href="#">In Progress</a>
+            <a class="navbar-item" href="#">Finished</a>
           </div>
         </div>
       </div>
@@ -35,31 +27,23 @@
             class="button is-primary is-block is-alt is-large"
             href="#"
             @click="toggleFormDisplayed"
-          >New Activity</a>
-          <div
-            v-if="isFormDisplayed"
-            class="create-form"
+            >New Activity</a
           >
+          <div v-if="isFormDisplayed" class="create-form">
             <h2>Create activity</h2>
             <form>
               <div class="field">
-                <label
-                  for="title"
-                  class="label"
-                >Title</label>
+                <label for="title" class="label">Title</label>
                 <div class="control">
                   <input
                     v-model="newActivity.title"
                     type="text"
                     class="input"
                     placeholder="Read a book"
-                  >
+                  />
                 </div>
                 <div class="field">
-                  <label
-                    for="note"
-                    class="label"
-                  >Notes</label>
+                  <label for="note" class="label">Notes</label>
                   <div class="control">
                     <textarea
                       v-model="newActivity.notes"
@@ -71,15 +55,12 @@
               </div>
               <div class="field is-grouped">
                 <div class="control">
-                  <button class="button is-link">
+                  <button class="button is-link" :disabled="!isFormValid">
                     Create a activity
                   </button>
                 </div>
                 <div class="control">
-                  <button
-                    class="button is-text"
-                    @click="toggleFormDisplayed"
-                  >
+                  <button class="button is-text" @click="toggleFormDisplayed">
                     Cancel
                   </button>
                 </div>
@@ -94,6 +75,10 @@
               :key="activity.id"
               :activity="activity"
             />
+            <div class="activity-length">
+              Currently {{ activityLength }} activities
+            </div>
+            <div class="activity-motivation">{{ activityMotivation }}</div>
           </div>
         </div>
       </div>
@@ -103,64 +88,66 @@
 
 <script>
 import ActivityItem from "./components/ActivityItem";
-import {fetchActivities} from './api/index';
+import { fetchActivities, fetchCategories, fetchUser } from "./api/index";
+
 export default {
   name: "App",
   components: { ActivityItem },
   data() {
     return {
-      message: "Hello world",
-      titleMessage: "Title Message Vue",
       isFormDisplayed: false,
+      creator: "Dalzon Charles-Hebert",
+      appName: "Activity Planner",
+      watchedName: "Activity Planner by Dalzon Charles-Hebert",
       newActivity: {
         title: "",
         notes: ""
       },
-      user: {
-        user: "Dalzon Charles-Hebert",
-        id: "-Aj34jknvncx98812"
-      },
-      activities: {
-        
-      },
-      categories: {
-        "1546969049": {
-          text: "books"
-        },
-        "1546969225": {
-          text: "movies"
-        }
-      }
+      user: {},
+      activities: {},
+      categories: {}
     };
   },
-  beforeCreate() {
-    console.log("beforeCreated called");
+  computed: {
+    isFormValid() {
+      return this.newActivity.title && this.newActivity.notes;
+    },
+    fullAppName() {
+      return this.appName + " by " + this.creator;
+    },
+    activityLength() {
+      // Transform a object to an array
+      const activitiesKeysArray = Object.keys(this.activities);
+      //Obtain the length of the array
+      const activitylength = activitiesKeysArray.length;
+      return activitylength;
+    },
+    activityMotivation() {
+      if (this.activityLength && this.activityLength < 5) {
+        return " Nice to see some activities 😀😀😀";
+      } else if (this.activityLength >= 5) {
+        return "So many activities!!!! Good job 😊😊";
+      } else {
+        return " No activities !! So sad😥😥";
+      }
+    }
   },
+  // watch: {
+  //   creator(value) {
+  //     this.watchedName = this.appName + " by " + value;
+  //   },
+  //   appName(value) {
+  //     this.watchedName = value + " by " + this.creator;
+  //   }
+  // },
   created() {
-   this.activities= fetchActivities()
-  },
-  beforeMount() {
-    console.log("beforeMount called");
-  },
-  mounted() {
-    console.log("mounted called");
-  },
-  beforeUpdate() {
-    console.log("beforeUpdate called");
-  },
-  updated() {
-    console.log("updated called");
-  },
-  beforeDestroy() {
-    console.log("beforeDestroy called");
-  },
-  destroyed() {
-    console.log("destroyed called");
+    this.activities = fetchActivities();
+    this.categories = fetchCategories();
+    this.user = fetchUser();
+    console.log(this.user);
+    console.log(this.categories);
   },
   methods: {
-    toggleTextDisplayed: function() {
-      this.isDisplayed = !this.isDisplayed;
-    },
     toggleFormDisplayed: function() {
       this.isFormDisplayed = !this.isFormDisplayed;
     }
@@ -240,5 +227,13 @@ article.post:last-child {
 .navbar-brand > h1 {
   font-size: 31px;
   padding: 20px;
+}
+
+.activity-motivation {
+  float: right;
+}
+
+.activity-length {
+  display: inline-block;
 }
 </style>
