@@ -11,9 +11,18 @@
       <div class="container">
         <div class="navbar-menu">
           <div class="navbar-start">
-            <a class="navbar-item is-active" href="#">Newest</a>
-            <a class="navbar-item" href="#">In Progress</a>
-            <a class="navbar-item" href="#">Finished</a>
+            <a
+              class="navbar-item is-active"
+              href="#"
+            >Newest</a>
+            <a
+              class="navbar-item"
+              href="#"
+            >In Progress</a>
+            <a
+              class="navbar-item"
+              href="#"
+            >Finished</a>
           </div>
         </div>
       </div>
@@ -22,37 +31,57 @@
       <div class="columns">
         <div class="column is-3">
           <a
-            @click="toggleFormDisplayed"
+            v-if="!isFormDisplayed"
             class="button is-primary is-block is-alt is-large"
             href="#"
-            v-if="!isFormDisplayed"
+            @click="toggleFormDisplayed"
           >New Activity</a>
-          <div v-if="isFormDisplayed" class="create-form">
+          <div
+            v-if="isFormDisplayed"
+            class="create-form"
+          >
             <h2>Create activity</h2>
             <form>
               <div class="field">
-                <label for="title" class="label">Title</label>
+                <label
+                  for="title"
+                  class="label"
+                >Title</label>
                 <div class="control">
                   <input
+                    v-model="newActivity.title"
                     type="text"
                     class="input"
                     placeholder="Read a book"
-                    v-model="newActivity.title"
-                  />
+                  >
                 </div>
                 <div class="field">
-                  <label for="note" class="label">Notes</label>
+                  <label
+                    for="note"
+                    class="label"
+                  >Notes</label>
                   <div class="control">
-                    <textarea placeholder="Notes" class="textarea" v-model="newActivity.notes"></textarea>
+                    <textarea
+                      v-model="newActivity.notes"
+                      placeholder="Notes"
+                      class="textarea"
+                    />
                   </div>
                 </div>
               </div>
               <div class="field is-grouped">
                 <div class="control">
-                  <button class="button is-link">Create a activity</button>
+                  <button class="button is-link">
+                    Create a activity
+                  </button>
                 </div>
                 <div class="control">
-                  <button class="button is-text" @click="toggleFormDisplayed">Cancel</button>
+                  <button
+                    class="button is-text"
+                    @click="toggleFormDisplayed"
+                  >
+                    Cancel
+                  </button>
                 </div>
               </div>
             </form>
@@ -60,7 +89,11 @@
         </div>
         <div class="column is-9">
           <div class="box content">
-            <ActivityItem v-for="activity in activities" :key="activity.id" :activity="activity"></ActivityItem>
+            <ActivityItem
+              v-for="activity in activities"
+              :key="activity.id"
+              :activity="activity"
+            />
           </div>
         </div>
       </div>
@@ -72,7 +105,7 @@
 import ActivityItem from "./components/ActivityItem";
 import {fetchActivities} from './api/index';
 export default {
-  name: "app",
+  name: "App",
   components: { ActivityItem },
   data() {
     return {
