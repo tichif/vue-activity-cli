@@ -72,16 +72,27 @@ export default {
   },
   computed: {
     isFormValid() {
-      return this.newActivity.title && this.newActivity.notes;
+      return (
+        this.newActivity.title &&
+        this.newActivity.notes &&
+        this.newActivity.category
+      );
     }
   },
   methods: {
     toggleFormDisplayed: function() {
       this.isFormDisplayed = !this.isFormDisplayed;
     },
+    resetActivity: function() {
+      this.isFormDisplayed = false;
+      this.newActivity.title = "";
+      this.newActivity.category = "";
+      this.newActivity.notes = "";
+    },
     createActivity: function() {
-      createActivityAPI(this.newActivity).then(activity => {
+      createActivityAPI({ ...this.newActivity }).then(activity => {
         this.$emit("activityCreated", { ...activity });
+        this.resetActivity();
       });
     }
   }

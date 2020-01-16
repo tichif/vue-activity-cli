@@ -1,34 +1,22 @@
 <template>
   <div id="app">
-    <nav class="navbar is-white topNav">
-      <div class="container">
-        <div class="navbar-brand">
-          <h1>{{ fullAppName }}</h1>
-          <!-- <h1>{{ watchedName }}</h1> -->
-        </div>
-      </div>
-    </nav>
-    <nav class="navbar is-white">
-      <div class="container">
-        <div class="navbar-menu">
-          <div class="navbar-start">
-            <a class="navbar-item is-active" href="#">Newest</a>
-            <a class="navbar-item" href="#">In Progress</a>
-            <a class="navbar-item" href="#">Finished</a>
-          </div>
-        </div>
-      </div>
-    </nav>
+    <TheNavbar></TheNavbar>
     <section class="container">
       <div class="columns">
         <div class="column is-3">
           <ActivityCreate @activityCreated="addActivity" :categories="categories"></ActivityCreate>
         </div>
         <div class="column is-9">
-          <div class="box content">
-            <ActivityItem v-for="activity in activities" :key="activity.id" :activity="activity" />
-            <div class="activity-length">Currently {{ activityLength }} activities</div>
-            <div class="activity-motivation">{{ activityMotivation }}</div>
+          <div class="box content" :class="{ fetching: isFetchingData, 'has-error':error }">
+            <div v-if="error">{{ error }}</div>
+            <div v-else>
+              <div v-if="isFetchingData">Loading....</div>
+              <ActivityItem v-for="activity in activities" :key="activity.id" :activity="activity" />
+            </div>
+            <div v-if="!isFetchingData">
+              <div class="activity-length">Currently {{ activityLength }} activities</div>
+              <div class="activity-motivation">{{ activityMotivation }}</div>
+            </div>
           </div>
         </div>
       </div>
@@ -40,25 +28,22 @@
 import Vue from "vue";
 import ActivityItem from "./components/ActivityItem";
 import ActivityCreate from "./components/ActivityCreate";
+import TheNavbar from "./components/TheNavbar";
 import { fetchActivities, fetchCategories, fetchUser } from "./api/index";
 
 export default {
   name: "App",
-  components: { ActivityItem, ActivityCreate },
+  components: { ActivityItem, ActivityCreate, TheNavbar },
   data() {
     return {
-      creator: "Dalzon Charles-Hebert",
-      appName: "Activity Planner",
-      watchedName: "Activity Planner by Dalzon Charles-Hebert",
       user: {},
       activities: {},
-      categories: {}
+      categories: {},
+      isFetchingData: false,
+      error: null
     };
   },
   computed: {
-    fullAppName() {
-      return this.appName + " by " + this.creator;
-    },
     activityLength() {
       // Transform a object to an array
       const activitiesKeysArray = Object.keys(this.activities);
@@ -77,7 +62,16 @@ export default {
     }
   },
   created() {
-    this.activities = fetchActivities();
+    this.isFetchingData = true;
+    fetchActivities()
+      .then(data => {
+        this.activities = data;
+        this.isFetchingData = false;
+      })
+      .catch(err => {
+        this.error = err;
+        this.isFetchingData = false;
+      });
     this.categories = fetchCategories();
     this.user = fetchUser();
     // console.log(this.user);
@@ -85,7 +79,6 @@ export default {
   },
   methods: {
     addActivity: function(newActivity) {
-      //this.activities[newActivity.id] = newActivity;
       Vue.set(this.activities, newActivity.id, newActivity);
       console.log(newActivity);
     }
@@ -105,6 +98,14 @@ html,
 body {
   font-family: "Open Sans", serif;
   background: #f2f6fa;
+}
+
+.fetching {
+  border: 2px solid orange;
+}
+
+.has-error {
+  border: 2px solid red;
 }
 footer {
   background-color: #f2f6fa !important;
