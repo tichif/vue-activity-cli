@@ -21,13 +21,28 @@ export const fetchActivities = function() {
   };
 };
 
+const generateUniqueId = () => Math.floor(new Date() * Math.random());
+
+export const createActivityAPI = activity => {
+  activity.id = generateUniqueId();
+  activity.progress = 0;
+  activity.createdAt = new Date();
+  activity.updateAt = new Date();
+
+  return new Promise((resolve, reject) => {
+    resolve(activity);
+  });
+};
+
 export const fetchCategories = () => {
   return {
     "1546969049": {
-      text: "books"
+      text: "books",
+      id: "1546969049"
     },
     "1546969225": {
-      text: "movies"
+      text: "movies",
+      id: "1546969225"
     }
   };
 };

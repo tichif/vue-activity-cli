@@ -22,62 +22,12 @@
     <section class="container">
       <div class="columns">
         <div class="column is-3">
-          <a
-            v-if="!isFormDisplayed"
-            class="button is-primary is-block is-alt is-large"
-            href="#"
-            @click="toggleFormDisplayed"
-            >New Activity</a
-          >
-          <div v-if="isFormDisplayed" class="create-form">
-            <h2>Create activity</h2>
-            <form>
-              <div class="field">
-                <label for="title" class="label">Title</label>
-                <div class="control">
-                  <input
-                    v-model="newActivity.title"
-                    type="text"
-                    class="input"
-                    placeholder="Read a book"
-                  />
-                </div>
-                <div class="field">
-                  <label for="note" class="label">Notes</label>
-                  <div class="control">
-                    <textarea
-                      v-model="newActivity.notes"
-                      placeholder="Notes"
-                      class="textarea"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div class="field is-grouped">
-                <div class="control">
-                  <button class="button is-link" :disabled="!isFormValid">
-                    Create a activity
-                  </button>
-                </div>
-                <div class="control">
-                  <button class="button is-text" @click="toggleFormDisplayed">
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            </form>
-          </div>
+          <ActivityCreate @activityCreated="addActivity" :categories="categories"></ActivityCreate>
         </div>
         <div class="column is-9">
           <div class="box content">
-            <ActivityItem
-              v-for="activity in activities"
-              :key="activity.id"
-              :activity="activity"
-            />
-            <div class="activity-length">
-              Currently {{ activityLength }} activities
-            </div>
+            <ActivityItem v-for="activity in activities" :key="activity.id" :activity="activity" />
+            <div class="activity-length">Currently {{ activityLength }} activities</div>
             <div class="activity-motivation">{{ activityMotivation }}</div>
           </div>
         </div>
@@ -87,31 +37,25 @@
 </template>
 
 <script>
+import Vue from "vue";
 import ActivityItem from "./components/ActivityItem";
+import ActivityCreate from "./components/ActivityCreate";
 import { fetchActivities, fetchCategories, fetchUser } from "./api/index";
 
 export default {
   name: "App",
-  components: { ActivityItem },
+  components: { ActivityItem, ActivityCreate },
   data() {
     return {
-      isFormDisplayed: false,
       creator: "Dalzon Charles-Hebert",
       appName: "Activity Planner",
       watchedName: "Activity Planner by Dalzon Charles-Hebert",
-      newActivity: {
-        title: "",
-        notes: ""
-      },
       user: {},
       activities: {},
       categories: {}
     };
   },
   computed: {
-    isFormValid() {
-      return this.newActivity.title && this.newActivity.notes;
-    },
     fullAppName() {
       return this.appName + " by " + this.creator;
     },
@@ -132,24 +76,18 @@ export default {
       }
     }
   },
-  // watch: {
-  //   creator(value) {
-  //     this.watchedName = this.appName + " by " + value;
-  //   },
-  //   appName(value) {
-  //     this.watchedName = value + " by " + this.creator;
-  //   }
-  // },
   created() {
     this.activities = fetchActivities();
     this.categories = fetchCategories();
     this.user = fetchUser();
-    console.log(this.user);
-    console.log(this.categories);
+    // console.log(this.user);
+    // console.log(this.categories);
   },
   methods: {
-    toggleFormDisplayed: function() {
-      this.isFormDisplayed = !this.isFormDisplayed;
+    addActivity: function(newActivity) {
+      //this.activities[newActivity.id] = newActivity;
+      Vue.set(this.activities, newActivity.id, newActivity);
+      console.log(newActivity);
     }
   }
 };

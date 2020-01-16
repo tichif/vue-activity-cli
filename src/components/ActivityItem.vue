@@ -10,7 +10,7 @@
       <div class="media-content">
         <div class="content">
           <p>
-            <a href="#">Dalzon Chales-Hebert</a>
+            <a href="#">Dalzon Charles-Hebert</a>
             updated
             {{ activity.updateAt }} minutes ago &nbsp;
           </p>
