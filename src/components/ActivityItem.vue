@@ -14,7 +14,7 @@
           <p>
             <a href="#">Dalzon Charles-Hébert</a>
             updated
-            {{ activity.updateAt }} minutes ago &nbsp;
+            {{ activity.updateAt | prettyTime }} &nbsp;
           </p>
         </div>
       </div>

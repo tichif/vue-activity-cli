@@ -4,7 +4,7 @@
     <section class="container">
       <div class="columns">
         <div class="column is-3">
-          <ActivityCreate @activityCreated="addActivity" :categories="categories"></ActivityCreate>
+          <ActivityCreate :categories="categories" @activityCreated="addActivity"></ActivityCreate>
         </div>
         <div class="column is-9">
           <div class="box content" :class="{ fetching: isFetchingData, 'has-error':error }">
