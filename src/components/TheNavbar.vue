@@ -25,7 +25,7 @@
 export default {
   data() {
     return {
-      creator: "Dalzon Charles-Hebert",
+      creator: "Dalzon Charles-Hébert",
       appName: "Activity Planner"
     };
   },

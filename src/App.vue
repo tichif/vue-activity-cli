@@ -11,7 +11,12 @@
             <div v-if="error">{{ error }}</div>
             <div v-else>
               <div v-if="isFetchingData">Loading....</div>
-              <ActivityItem v-for="activity in activities" :key="activity.id" :activity="activity" />
+              <ActivityItem
+                v-for="activity in activities"
+                :key="activity.id"
+                :activity="activity"
+                :categories="categories"
+              />
             </div>
             <div v-if="!isFetchingData">
               <div class="activity-length">Currently {{ activityLength }} activities</div>
@@ -80,7 +85,6 @@ export default {
   methods: {
     addActivity: function(newActivity) {
       Vue.set(this.activities, newActivity.id, newActivity);
-      console.log(newActivity);
     }
   }
 };
