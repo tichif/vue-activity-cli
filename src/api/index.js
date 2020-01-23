@@ -25,3 +25,7 @@ export const createActivityAPI = activity => {
 
   return fakeApi.post("activities", activity);
 };
+
+export const deleteActivityApi = activity => {
+  return fakeApi.delete("activities", activity);
+};

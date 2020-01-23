@@ -16,6 +16,7 @@
                 :key="activity.id"
                 :activity="activity"
                 :categories="categories"
+                @activityDeleted="deleteActivity"
               />
             </div>
             <div v-if="!isFetchingData">
@@ -34,7 +35,7 @@ import Vue from "vue";
 import ActivityItem from "./components/ActivityItem";
 import ActivityCreate from "./components/ActivityCreate";
 import TheNavbar from "./components/TheNavbar";
-import { fetchActivities, fetchCategories, fetchUser } from "./api/index";
+import { fetchActivities, fetchCategories, fetchUser, deleteActivityApi } from "./api/index";
 
 export default {
   name: "App",
@@ -88,6 +89,12 @@ export default {
   methods: {
     addActivity: function(newActivity) {
       Vue.set(this.activities, newActivity.id, newActivity);
+    },
+    deleteActivity: function(activity){
+      deleteActivityApi(activity)
+      .then(deleteActivity =>{
+        Vue.delete(this.activities, deleteActivity.id);
+      })
     }
   }
 };

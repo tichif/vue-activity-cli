@@ -2,7 +2,7 @@
   <article class="post">
     <div class="activity-title-wrapper">
       <h4 class="activity-title">{{ activity.title }}</h4>
-      <i class="fas fa-cog activity-settings"></i>
+      <i class="fas fa-cog activity-settings" @click="toggleIsDisplayed"></i>
     </div>
     <p>{{ categories[activity.category].text }}</p>
     <p>{{ activity.notes }}</p>
@@ -24,13 +24,17 @@
       <div class="media-right">
         <span>
           Progress:
-          <span :style="{'color': activityProgress}">{{activity.progress}}%</span>
+          <span :style="{ color: activityProgress }"
+            >{{ activity.progress }}%</span
+          >
         </span>
       </div>
     </div>
-    <div class="activity-controll">
+    <div class="activity-controll" v-if="isDisplayed">
       <a href class="button is-warning">Edit</a>
-      <a href class="button is-danger">Delete</a>
+      <a href class="button is-danger" @click.prevent="deleteActivity"
+        >Delete</a
+      >
     </div>
   </article>
 </template>
@@ -39,6 +43,7 @@
 import textUtility from "../mixins/textUtility";
 
 export default {
+  mixins: [textUtility],
   props: {
     categories: {
       type: Object,
@@ -49,7 +54,11 @@ export default {
       required: true
     }
   },
-  mixins: [textUtility],
+  data() {
+    return {
+      isDisplayed: false
+    };
+  },
   computed: {
     activityProgress() {
       const progress = this.activity.progress;
@@ -60,6 +69,14 @@ export default {
       } else {
         return "green";
       }
+    }
+  },
+  methods: {
+    toggleIsDisplayed: function() {
+      this.isDisplayed = !this.isDisplayed;
+    },
+    deleteActivity: function() {
+      return this.$emit("activityDeleted", this.activity);
     }
   }
 };

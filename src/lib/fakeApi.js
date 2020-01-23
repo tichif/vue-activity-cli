@@ -40,7 +40,7 @@ class FakeApi {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         if (force || this.canContinue()) {
-          resolve({...data[resource]});
+          resolve({ ...data[resource] });
         } else {
           reject("Cannot fetch " + resource);
         }
@@ -48,11 +48,18 @@ class FakeApi {
     });
   }
 
-  post(resource, item){
+  post(resource, item) {
     return new Promise((resolve, reject) => {
       data[resource][item.id] = item;
       resolve(item);
-    })
+    });
+  }
+
+  delete(resource, item) {
+    return new Promise((resolve, reject) => {
+      delete data[resource][item.id];
+      resolve(item);
+    });
   }
 }
 
