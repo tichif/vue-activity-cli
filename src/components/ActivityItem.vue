@@ -1,7 +1,10 @@
 <template>
   <article class="post">
-    <h4 class="activityTitle">{{ activity.title }}</h4>
-    <p>{{ textUtility_capitalize(categories[activity.category].text) }}</p>
+    <div class="activity-title-wrapper">
+      <h4 class="activity-title">{{ activity.title }}</h4>
+      <i class="fas fa-cog activity-settings"></i>
+    </div>
+    <p>{{ categories[activity.category].text }}</p>
     <p>{{ activity.notes }}</p>
     <div class="media">
       <div class="media-left">
@@ -24,6 +27,10 @@
           <span :style="{'color': activityProgress}">{{activity.progress}}%</span>
         </span>
       </div>
+    </div>
+    <div class="activity-controll">
+      <a href class="button is-warning">Edit</a>
+      <a href class="button is-danger">Delete</a>
     </div>
   </article>
 </template>
@@ -58,7 +65,24 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.activity-title {
+  margin-bottom: 5px;
+  display: inline-block;
+}
+.activity-settings {
+  float: right;
+  font-size: 22px;
+  &:hover {
+    cursor: pointer;
+  }
+}
+.activity-controll {
+  margin: 20px 0 0 0;
+  a {
+    margin-right: 5px;
+  }
+}
 .activityTitle {
   margin-bottom: 5px;
 }

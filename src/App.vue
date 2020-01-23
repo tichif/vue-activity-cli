@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div v-if="isDataLoaded" id="app">
     <TheNavbar></TheNavbar>
     <section class="container">
       <div class="columns">
@@ -42,8 +42,8 @@ export default {
   data() {
     return {
       user: {},
-      activities: {},
-      categories: {},
+      activities: null,
+      categories: null,
       isFetchingData: false,
       error: null
     };
@@ -64,6 +64,9 @@ export default {
       } else {
         return " No activities !! So sad😥😥";
       }
+    },
+    isDataLoaded: function() {
+      return this.categories && this.categories;
     }
   },
   created() {
@@ -77,10 +80,10 @@ export default {
         this.error = err;
         this.isFetchingData = false;
       });
-    this.categories = fetchCategories();
+    fetchCategories().then(categories => {
+      this.categories = categories;
+    });
     this.user = fetchUser();
-    // console.log(this.user);
-    // console.log(this.categories);
   },
   methods: {
     addActivity: function(newActivity) {
