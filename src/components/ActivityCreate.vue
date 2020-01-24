@@ -53,6 +53,7 @@
 
 <script>
 import { createActivityAPI } from "../api/index";
+import store from "../store/index";
 export default {
   props: {
     categories: {
@@ -90,9 +91,9 @@ export default {
       this.newActivity.notes = "";
     },
     createActivity: function() {
-      createActivityAPI({ ...this.newActivity }).then(activity => {
-        this.$emit("activityCreated", { ...activity });
+      store.createActivity({ ...this.newActivity }).then(activity => {
         this.resetActivity();
+        this.isFormDisplayed = false;
       });
     }
   }
