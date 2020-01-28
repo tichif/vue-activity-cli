@@ -2,12 +2,12 @@
   <article class="post">
     <div class="activity-title">
       <!-- TODO: Add v-model -->
-      <input v-model="activity.title" type="text" class="input" />
       <i class="fas fa-cog activity-settings" @click="toggleIsDisplayed" />
+      <input v-model="updateActivityItem.title" type="text" class="input" />
     </div>
     <div class="activity-category">
       <!-- TODO: add v-model and iterate categories in option  -->
-      <select v-model="activity.category" class="select">
+      <select v-model="updateActivityItem.category" class="select">
         <option disabled value>Please select one</option>
         <option
           v-for="category in categories"
@@ -18,7 +18,11 @@
     </div>
     <div class="control activity-notes">
       <!-- TODO: Add v-model here -->
-      <textarea v-model="activity.notes" class="textarea" placeholder="Write some notes here" />
+      <textarea
+        v-model="updateActivityItem.notes"
+        class="textarea"
+        placeholder="Write some notes here"
+      />
     </div>
     <div class="media">
       <div class="media-left">
@@ -30,7 +34,7 @@
         <div class="content">
           <p>
             <a href="#">Dalzon Charles-Hébert</a>
-            updated {{ activity.updatedAt | prettyTime }} &nbsp;
+            updated {{ updateActivityItem.updatedAt | prettyTime }} &nbsp;
           </p>
         </div>
       </div>
@@ -38,7 +42,7 @@
         <!-- TODO: Add v-model here -->
         <input
           id="progress"
-          v-model="activity.progress"
+          v-model="updateActivityItem.progress"
           type="range"
           name="progress"
           min="0"
@@ -46,7 +50,7 @@
           value="90"
           step="10"
         />
-        <label for="progress">{{ activity.progress }} %</label>
+        <label for="progress">{{ updateActivityItem.progress }} %</label>
       </div>
     </div>
     <div class="activity-controll">
@@ -60,6 +64,7 @@
 
 <script>
 import textUtility from "../mixins/textUtility";
+import store from "../store/index";
 export default {
   mixins: [textUtility],
   props: {
@@ -74,7 +79,8 @@ export default {
   },
   data() {
     return {
-      isDisplayed: false
+      isDisplayed: true,
+      updateActivityItem: { ...this.activity }
     };
   },
   methods: {
@@ -82,7 +88,9 @@ export default {
       this.isDisplayed = !this.isDisplayed;
     },
     updateActivity: function() {
-      console.log(this.activity);
+      store.updateActivity(this.updateActivityItem).then(() => {
+        this.$emit('toggleUpdate', false);
+      })
     }
   }
 };
@@ -91,6 +99,10 @@ export default {
 <style lang="scss" scoped>
 .activity-title {
   margin-bottom: 10px;
+
+  i {
+    margin-bottom: 10px;
+  }
 }
 .activity-settings {
   float: right;

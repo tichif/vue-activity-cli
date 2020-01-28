@@ -5,6 +5,7 @@
       :activity="activity"
       :categories="categories"
       @showUpdateForm="changeUpdateState"
+      @toggleUpdate="changeUpdateState"
     ></ActivityUpdate>
     <ActivityItemDetail
       v-else

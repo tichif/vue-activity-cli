@@ -72,7 +72,13 @@ export default {
       }
     },
     isDataLoaded: function() {
-      return this.categories && this.categories;
+      return this.activitiesLength && this.categoriesLength;
+    },
+    activitiesLength: function() {
+      return Object.keys(this.activities).length;
+    },
+    categoriesLength: function() {
+      return Object.keys(this.categories).length;
     }
   },
   created() {
