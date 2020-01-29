@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isDataLoaded" id="app">
+  <div id="app">
     <TheNavbar></TheNavbar>
     <section class="container">
       <div class="columns">
@@ -11,12 +11,14 @@
             <div v-if="error">{{ error }}</div>
             <div v-else>
               <div v-if="isFetchingData">Loading....</div>
-              <ActivityItem
-                v-for="activity in activities"
-                :key="activity.id"
-                :activity="activity"
-                :categories="categories"
-              />
+              <div v-if="isDataLoaded">
+                <ActivityItem
+                  v-for="activity in activities"
+                  :key="activity.id"
+                  :activity="activity"
+                  :categories="categories"
+                />
+              </div>
             </div>
             <div v-if="!isFetchingData">
               <div class="activity-length">Currently {{ activityLength }} activities</div>
@@ -41,6 +43,8 @@ import TheNavbar from "./components/TheNavbar";
 //   fetchUser,
 //   deleteActivityApi
 // } from "./api/index";
+
+import fakeApi from "./lib/fakeApi";
 
 export default {
   name: "App",
@@ -82,6 +86,8 @@ export default {
     }
   },
   created() {
+    // ONLY RUN ONCE FOR POPULATE LACAL STORAGE!!!!
+    // fakeApi.fillDB();
     this.isFetchingData = true;
     store
       .fetchActivities()
